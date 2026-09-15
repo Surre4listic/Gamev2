@@ -24,7 +24,7 @@ public class Tables {
     };
     
 
-    public static Integer[][] levels = new Integer[][] {
+    public static int[][] levels = new int[][] {
         // Level, exp required
         {1, 0},
         {2, 100},
