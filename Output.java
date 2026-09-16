@@ -3,7 +3,8 @@ public class Output {
     private static boolean isDebugEnabled = true; // Set to true to enable debug messages
     
     public static void Send(String message) {
-        System.out.println(" " + message.replace("\n", "\n "));
+        System.out.println(" " + message.replace("\n", "\n ") + 
+        "H: "+ Main.player.getHealth() + "<>");
     }
 
     public static void Send(String message, boolean prompt) {

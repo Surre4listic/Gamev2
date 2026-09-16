@@ -25,9 +25,10 @@ public class Player {
         int currentLevel = 0;
         // Calculate the player's level based on experience
         for (int i = 0; i <= Tables.levels.length - 1; i++) {
-            Output.Debug(this.experience + ">=" + Tables.levels[i][1]);
+            Output.Debug(this.experience + " >= " + Tables.levels[i][1]);
             if (this.experience >= Tables.levels[i][1]) {
                 currentLevel = i + 1;
+                break;
             }
         }
 
@@ -43,6 +44,10 @@ public class Player {
         }
 
         this.level = currentLevel;
+    }
+
+    public int getHealth() {
+        return this.health;
     }
 
 }
