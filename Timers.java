@@ -6,6 +6,7 @@ interface callBack { void Reset(); }
 public class Timers {
 
     Timer timer = new Timer();
+    TimerTask timerTask;
     boolean isCreated;
    
     public Timers() {
@@ -14,18 +15,29 @@ public class Timers {
 
     public void Start(callBack callback, Double delay) {
         isCreated = true;
-        final TimerTask tt = new TimerTask() {
+        timerTask = new TimerTask() {
             @Override
             public void run() {
                 callback.Reset();
             }
         };
-        timer.schedule(tt, (long)(delay * 1000));
+        timer.schedule(timerTask, (long)(delay * 1000));
     }
 
-    public void setCreated() { }
+    public void Cancel() {
 
+        timerTask.cancel();
+        timer.purge();
+        System.out.println("-------------");
+        /*
+        if (tt != null ) {tt.cancel();}
+        if (timer != null ) {timer.purge();}
+        */
+    }
+
+    // set value if timer is created, this is used to keep track on timers, balances etc
+    public void setCreated(boolean value) { this.isCreated = value; }
+    // get value if there is a timer and see if it's used already
     public boolean getCreated() { return isCreated; }
 
 }
-

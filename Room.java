@@ -9,11 +9,13 @@ public class Room {
     
     // display a new room
     public Room() {
-        String displayRoom = "Room";
 
-        // call method that populates room
-        populateRoom();
+        String displayRoom = "You enterd room ***.";
         
+        // call method that populates room
+        this.populateRoom();
+
+        // show all mobs to the room
         for (Mob mob : mobsInRoom) {
             displayRoom += "\n" + mob.getName();
         }
@@ -29,10 +31,17 @@ public class Room {
     // method to populate room with 0-3 potential mobs 
     private void populateRoom() {
         for (int i = 1; i <= random.nextInt(4); i++) {
-            Output.Debug("populateRoom: i=" + i);
             // add random mob from within length of mobtemplate and use method mobcreate to give it
             mobsInRoom.add(MobTemplate.createMob(MobTemplate.values()[random.nextInt(MobTemplate.values().length)]));
         }
     }
+
+    // clear the room of mobs and call necessary methods to remove timers
+    public void clearRoom() {
+        for (Mob mob : this.mobsInRoom) {
+            mob.Remove();
+        }
+    }
+
 
 }

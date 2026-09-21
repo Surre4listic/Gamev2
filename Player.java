@@ -9,8 +9,7 @@ public class Player implements callBack {
     // 
     private boolean isProned = true;
     // different kind of balances and timers
-    private Timers balance = new Timers();
-
+    private Timers timerBalance = new Timers();
 
     // constructor when object is created, always require name
     public Player(String name) {
@@ -37,7 +36,7 @@ public class Player implements callBack {
         }
 
         // Calculate health based on level
-        this.healthMax = 100 + (this.level - 1) * 10;
+        this.healthMax = 1000 + (this.level - 1) * 5;
 
         Output.Debug(currentLevel + "-:-" + this.level);
         // Output message if you change level
@@ -51,10 +50,20 @@ public class Player implements callBack {
     }
 
     public void Attack(String name) {
+        
         for (Mob mob : Main.room.mobsInRoom) {
-            Output.Send("You attacked " + mob.getName());
-            balance.Start(this, 2.0);
+            timerBalance.Start(this, 2.0);
+            mob.takeDamage(50);
+            Output.Send("You attacked " + mob.getName() + (mob.getHealth() <= 0 ? " and it falls helplessly to the ground.":"."));
+            break;
         }
+
+    }
+
+    // 
+    public void TakeDamage(int damage) {
+        this.health -= damage;
+    
     }
 
     public String getName() {
@@ -66,7 +75,7 @@ public class Player implements callBack {
     }
 
     public boolean getBalance() {
-        if (balance.isCreated) { return true; } else { return false; }
+        if (timerBalance.isCreated) { return true; } else { return false; }
     }
 
     public int getHealthMax() {
@@ -78,7 +87,7 @@ public class Player implements callBack {
     }
 
     public void Reset() {
-        System.out.println("Test from player");
+        Output.Debug("You have recovered balance.");
     }
 
 }

@@ -21,24 +21,47 @@ public class Mob implements callBack {
     }
 
     public void Reset() {
-        System.out.println("Test from mob");
+        // reset balance from balance
+        this.balance.isCreated = false;
+        // remove timer for balance
+        // this.balance.timer.cancel();
+        // attack again
+        this.Attack();
     }
 
     private void Attack() {
-        //
-        balance.Start(this, dmginterval);
+        if (!this.balance.isCreated) {
+            balance.Start(this, dmginterval);
+            Main.player.TakeDamage(calcDmg());
+            Output.Send(this.name + " attacks you.");
+        }
     }
 
-    
+    // metod to remove mobs in the room
+    public void Remove() {
+        Output.Debug("Mob -> Remove -> " + getName() + ". " + getId() + ".");
+        // remove any balance timer present
+        balance.Cancel();
+        // remove reference
+        balance = null;
+    }
+
+    public void takeDamage(int damage) {
+        // remove health from mob
+        this.health -= damage;
+        // if health is less then 0
+        if (this.health <= 0) {
+            Main.player.expChanged(this.getExp());
+            balance.Cancel();
+        }
+    }
 
     public int calcDmg() { return dmg;}
     public double getDmgInterval() { return this.dmginterval; }
-    public void takeDamage(int damage) { this.health -= damage; }
 
     public UUID getId() { return this.id; }
     public String getName() { return this.name; }
     public int getHealth() { return this.health; }
     public int getExp() { return this.exp; }
-
 
 }
