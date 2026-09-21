@@ -1,17 +1,21 @@
 public class Output {
 
-    private static boolean isDebugEnabled = true; // Set to true to enable debug messages
+    // set to true to enable debug messages
+    private static boolean isDebugEnabled = true;
     
+    // standard print function (with prompt after message)
     public static void Send(String message) {
         System.out.println(" " + message.replace("\n", "\n ") + 
-        "H: "+ Main.player.getHealth() + "<>");
+        "\n H: "+ Main.player.getHealth() + "/" + Main.player.getHealthMax() +
+        " <"+ (!Main.player.hasBalance.onGoing()?"B":"-") + (!Main.player.getProned()?"P":"") +">");
     }
 
+    // print without prompt
     public static void Send(String message, boolean prompt) {
         System.out.println(" " + message.replace("\n", "\n "));
     }
 
-    // Debug method to print debug messages
+    // show debugging if we have isDebugEnabled are true
     public static void Debug(String message) {
         if (isDebugEnabled) {
             System.out.println("[DEBUG] " + message);

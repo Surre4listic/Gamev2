@@ -1,25 +1,29 @@
+
 public class Player {
 
     private String name;
-    private int health;
-    private int healthMax;
-    private int level;
-    private int experience;
-    private boolean isBalance = true;
+    // new players always start with these
+    private int health = 1000;
+    private int healthMax = 1000;
+    private int level = 1;
+    private int experience = 0;
+    // 
+    private boolean isProned = true;
+    // different kind of balances and timers
+    public Timers hasBalance = new Timers();
 
+    // constructor when object is created, always require name
     public Player(String name) {
         this.name = name;
-        this.level = 1;
-        this.experience = 0;
-        calculateStats();
-        this.health = this.healthMax;
     }
 
+    // change experience and call method to calculate changes
     public void expChanged(int exp) {
         this.experience += exp;
         calculateStats();
     }
 
+    // Calculate stats such as health, mana, strength etc
     private void calculateStats() {
 
         int currentLevel = 0;
@@ -35,7 +39,7 @@ public class Player {
         // Calculate health based on level
         this.healthMax = 100 + (this.level - 1) * 10;
 
-        Output.Debug(currentLevel + ":" + this.level);
+        Output.Debug(currentLevel + "-:-" + this.level);
         // Output message if you change level
         if (currentLevel > this.level) {
             Output.Send("You have increased to level " + currentLevel + "!");
@@ -46,8 +50,21 @@ public class Player {
         this.level = currentLevel;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public int getHealth() {
         return this.health;
     }
+
+    public int getHealthMax() {
+        return this.healthMax;
+    }
+    
+    public boolean getProned() {
+        return this.isProned;
+    }
+
 
 }
