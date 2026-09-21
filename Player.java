@@ -1,5 +1,4 @@
-
-public class Player {
+public class Player implements callBack {
 
     private String name;
     // new players always start with these
@@ -10,7 +9,8 @@ public class Player {
     // 
     private boolean isProned = true;
     // different kind of balances and timers
-    public Timers hasBalance = new Timers();
+    private Timers balance = new Timers();
+
 
     // constructor when object is created, always require name
     public Player(String name) {
@@ -50,12 +50,23 @@ public class Player {
         this.level = currentLevel;
     }
 
+    public void Attack(String name) {
+        for (Mob mob : Main.room.mobsInRoom) {
+            Output.Send("You attacked " + mob.getName());
+            balance.Start(this, 2.0);
+        }
+    }
+
     public String getName() {
         return this.name;
     }
 
     public int getHealth() {
         return this.health;
+    }
+
+    public boolean getBalance() {
+        if (balance.isCreated) { return true; } else { return false; }
     }
 
     public int getHealthMax() {
@@ -66,5 +77,8 @@ public class Player {
         return this.isProned;
     }
 
+    public void Reset() {
+        System.out.println("Test from player");
+    }
 
 }

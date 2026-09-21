@@ -7,7 +7,7 @@ public class Output {
     public static void Send(String message) {
         System.out.println(" " + message.replace("\n", "\n ") + 
         "\n H: "+ Main.player.getHealth() + "/" + Main.player.getHealthMax() +
-        " <"+ (!Main.player.hasBalance.onGoing()?"B":"-") + (!Main.player.getProned()?"P":"") +">");
+        " <"+ (!Main.player.getBalance()?"B":"-") + (!Main.player.getProned()?"P":"") +">");
     }
 
     // print without prompt

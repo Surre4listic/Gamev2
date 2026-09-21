@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Room {
 
-    private List<Mob> mobsInRoom = new ArrayList<>();
+    public List<Mob> mobsInRoom = new ArrayList<>();
     private static final Random random = new Random();
     
     // display a new room
@@ -30,7 +30,8 @@ public class Room {
     private void populateRoom() {
         for (int i = 1; i <= random.nextInt(4); i++) {
             Output.Debug("populateRoom: i=" + i);
-            mobsInRoom.add(MobCreate.createMob(MobTemplate.values()[random.nextInt(MobTemplate.values().length)]));
+            // add random mob from within length of mobtemplate and use method mobcreate to give it
+            mobsInRoom.add(MobTemplate.createMob(MobTemplate.values()[random.nextInt(MobTemplate.values().length)]));
         }
     }
 

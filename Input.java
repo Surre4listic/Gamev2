@@ -5,6 +5,8 @@ public class Input {
         if ("move".equalsIgnoreCase(input)) {
             Main.room = null;
             Main.room = new Room();
+        } else if ("attack".equalsIgnoreCase(input)) {
+            Main.player.Attack("asdf");
         }
 
         return true;
