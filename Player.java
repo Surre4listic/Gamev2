@@ -86,8 +86,8 @@ public class Player implements callBack {
         return this.isProned;
     }
 
-    public void Reset() {
-        Output.Debug("You have recovered balance.");
+    public void Reset(String test) {
+        Output.Debug("You have recovered balance." + test);
     }
 
 }

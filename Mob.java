@@ -20,13 +20,15 @@ public class Mob implements callBack {
         this.Attack();
     }
 
-    public void Reset() {
+    public void Reset(String test) {
         // reset balance from balance
         this.balance.isCreated = false;
         // remove timer for balance
         // this.balance.timer.cancel();
         // attack again
         this.Attack();
+        System.out.println("Mob test=" + test);
+        System.err.println("testar");
     }
 
     private void Attack() {

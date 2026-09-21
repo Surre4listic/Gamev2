@@ -1,7 +1,7 @@
 import java.util.Timer;
 import java.util.TimerTask;
 
-interface callBack { void Reset(); }
+interface callBack { void Reset(String test); }
 
 public class Timers {
 
@@ -18,7 +18,7 @@ public class Timers {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                callback.Reset();
+                callback.Reset("test2");
             }
         };
         timer.schedule(timerTask, (long)(delay * 1000));
