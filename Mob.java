@@ -1,7 +1,7 @@
 import java.util.UUID;
 
 // implements callBack interface from Timers class
-public class Mob implements callBack {
+public class Mob implements Listener {
 
     private final UUID id;
     private final String name;
@@ -9,7 +9,7 @@ public class Mob implements callBack {
     private final int dmg;
     private final double balance;
     private final int exp;
-    private Timers timerBalance = new Timers("balance");
+    private Timers timeBalance = new Timers("mobBalance", this);
 
     // constructor
     public Mob(UUID id, String name, int health, int dmg, double balance, int exp) {
@@ -22,16 +22,21 @@ public class Mob implements callBack {
         this.Attack();
     }
 
-    public void timerComplete() {
-        // reset balance from balance
-        this.timerBalance.isReady = true;
-        // attack again
-        this.Attack();
+    // method that overides interface in timer
+    @Override
+    public void onTaskComplete(TimersReturn result) {
+        Output.Debug("Mob (onTaskComplete): '" + result.getName() + "'");
+
+        if ("mobBalance".equals(result.getName())) {
+            timeBalance.setReady(true);
+            this.Attack();
+        }
+
     }
 
     private void Attack() {
-        if (this.timerBalance.isReady) {
-            timerBalance.Start(this, balance);
+        if (timeBalance.getReady()) {
+            timeBalance.Start((long)balance);
             Main.player.TakeDamage(calcDmg());
             Output.Send(this.name + " attacks you.");
         }
@@ -48,9 +53,9 @@ public class Mob implements callBack {
     // method to clear timers for this mob
     public void ClearTimer() {
         // remove any balance timer present
-        timerBalance.Cancel();
+        timeBalance.Cancel();
         // remove reference to timer
-        timerBalance = null;
+        timeBalance = null;
     }
 
     public void takeDamage(int damage) {
@@ -59,7 +64,7 @@ public class Mob implements callBack {
         // if health is less then 0
         if (this.health <= 0) {
             Main.player.expChanged(this.getExp());
-            timerBalance.Cancel();
+            timeBalance.Cancel();
         }
     }
 

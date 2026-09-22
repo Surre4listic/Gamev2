@@ -1,39 +1,45 @@
 import java.util.Timer;
-import java.util.TimerTask;
-
-// callback interface to help the class that created timer react to completetion
-interface callBack { void timerComplete(); }
 
 public class Timers {
 
-    Timer timer = new Timer();
-    TimerTask timerTask;
-    boolean isReady;
-    String name;
-   
-    // constructor
-    public Timers(String name) {
+    // variables to keep track on this timer and use to check if it's in use.
+    private final String name;
+    private boolean isReady;
+
+    // create a timer
+    private Timer timer;
+    // create a timertask from our own modified class
+    private TimersTask task;
+    // set a listener to pass to timertask
+    private Listener listener;
+    // 
+
+    public Timers(String name, Listener listener) {
+        Output.Debug("Timers (Constructor): " + name );
         this.name = name;
-        this.isReady  = true;
+        this.listener = listener;
+        this.timer = new Timer();
+        this.isReady = true;
     }
 
-    // start a timer
-    public void Start(callBack callback, Double delay) {
-        this.isReady = false;
-        timerTask = new TimerTask() {
-            @Override
-            public void run() { callback.timerComplete(); }
-        };
-        timer.schedule(timerTask, (long)(delay * 1000));
+    public void Start(Long time) {
+        isReady = false;
+        Output.Debug("Timers (Start): " + this.name + ". Time: " + time.intValue());
+        task = new TimersTask(this.name, listener);
+        timer.schedule(task, 3000);
     }
 
     public void Cancel() {
-        timerTask.cancel();
-        timer.purge();
+        timer.cancel();
     }
 
-    public boolean getReady() { return this.isReady; }
-    public void setReady(boolean value) { this.isReady = value; }
+    public boolean getReady() {
+        return isReady;
+    }
 
+    public void setReady(boolean value) {
+        isReady = value;
+    }
 
+    
 }

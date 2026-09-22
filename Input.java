@@ -25,6 +25,11 @@ public class Input {
                 Main.player.Attack(input.replace("attack ", ""));
             }
 
+        // look
+        } else if ("sleep".equalsIgnoreCase(input)) {
+
+            Main.player.Sleep();
+
         // exit the game
         } else if ("exit".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input)) {
             return false;

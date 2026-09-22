@@ -11,6 +11,10 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Input input = new Input();
 
+        // Easier way to switch between debug mode
+        Output.Send("\n\nDebug console? 'Y'?\n\n", false);
+        if (scanner.nextLine().equalsIgnoreCase("y")) { Output.isDebugEnabled = true; }
+
         Output.Send("Welcome to the game! Please choose a character name:", false);
         // create the player object with the next input as the name
         Main.player = new Player(scanner.nextLine());
@@ -25,7 +29,6 @@ public class Main {
         // close the scanner and end the game
         scanner.close();
         Output.Send("Thank you for playing!", false);
-
 
     }
 }

@@ -1,17 +1,18 @@
-// implements callBack interface from Timers
-public class Player implements callBack {
+
+public class Player implements Listener {
 
     private String name;
     // new players always start with these
     private int health = 1000;
     private int healthMax = 1000;
-    private int level = 1;
+    private int level = 0;
     private int experience = 0;
     // 
     private boolean isProned = false;
-    // different kind of balances and timers
-    private Timers timerBalance = new Timers("balance");
-    private Timers timerEquilbrium = new Timers("equilbrium");
+
+    // create our own Timer from Timers object that are modified. Pass this class that has the listener, pass name for onTaskComplete listener
+    private Timers timeBalance = new Timers("balance", this);
+    private Timers timeSleep = new Timers("sleeping", this);
 
     // constructor when player object is created
     public Player(String name) {
@@ -21,7 +22,6 @@ public class Player implements callBack {
     // change experience and call method to calculate changes
     public void expChanged(int exp) {
         this.experience += exp;
-        System.out.println("Current exp: " + this.experience);
         calculateStats();
     }
 
@@ -30,10 +30,10 @@ public class Player implements callBack {
 
         int currentLevel = 0;
         // Calculate the player's level based on experience
-        for (int i = 0; i <= Tables.levels.length - 1; i++) {
-            Output.Debug(this.experience + " >= " + Tables.levels[i][1]);
-            if (this.experience >= Tables.levels[i][1]) {
-                currentLevel = i + 1;
+        for (int lvl = 0; lvl <= 100; lvl++) {
+            Output.Debug("Our experience: " + this.experience + "/" + ((int)(100.0 * Math.pow(lvl, 1.5))) + ". Next: "+ ((int)(100.0 * Math.pow(lvl+1, 1.5))) +". Level: " + lvl + ". ");
+            if ((int)(100.0 * Math.pow(lvl, 1.5)) <= this.experience) {
+                currentLevel = lvl;
             } else {
                 break;
             }
@@ -52,13 +52,19 @@ public class Player implements callBack {
         this.level = currentLevel;
     }
 
-    public void Attack(String name) {
+    //
+    public void healthIncrease() {
+        this.health = Math.min((int)(this.healthMax * 1.20), this.healthMax);
+    }
 
+    // 
+    public void Attack(String name) {
         // check and save eventual target in the room
+     
         Mob target = Main.room.inRoom(name);
         if (target != null) {
 
-            timerBalance.Start(this, 2.5);
+            timeBalance.Start(2500L);
             target.takeDamage(50);
             Output.Send("You attacked " + target.getName() + (target.getHealth() <= 0 ? " and it falls helplessly to the ground.":"."));
 
@@ -72,8 +78,15 @@ public class Player implements callBack {
         } else {
             Output.Debug("You cant find \""+ name + "\" here.");
         }
-        
 
+    }
+
+    public void Sleep() {
+
+        timeSleep.Start(3000L);
+        System.out.println("Start timer.");
+        Output.Send("You lay down and fall sleep.");
+        this.isProned = true;
 
     }
 
@@ -81,8 +94,9 @@ public class Player implements callBack {
     public void TakeDamage(int damage) {
         this.health -= damage;
         if (this.health <= 0) {
-            // dead
-            // lose exp
+            Main.room.clearRoom();
+            Output.Send("You have died.");
+            Main.player.calculateStats();
         }
     }
 
@@ -98,25 +112,37 @@ public class Player implements callBack {
         return false;
     }
 
+    
     public boolean getBalance() {
-        if (timerBalance.getReady()) { return true; } else { return false; }
+        return timeBalance.getReady();
     }
 
-    // method that overides interface in timer
-    public void timerComplete() {
 
-        Output.Debug("Timer reset for: " + this.timerBalance.name + ".");
+    // method that overides interface in timers
+    @Override
+    public void onTaskComplete(TimersReturn result) {
+        Output.Debug("Player (onTaskComplete): '" + result.getName() + "'");
 
-        if (this.timerBalance.name == "balance") {
+        if ("balance".equals(result.getName())) {
 
-            this.timerBalance.setReady(true);
-            Output.Send("You have recovered balance.");
+            timeBalance.setReady(true);
+            Output.Send("You have recovered your balance.");
+            
+        } else if ("sleeping".equals(result.getName())) {
 
-        } else if (this.timerBalance.name == "equilibrium") {
+            this.health = Math.min((int)(this.healthMax * 1.20), this.healthMax);
+            if (getHealthMax() >= getHealth()) {
+                Output.Send("You snore and continue sleeping.");
+            } else {
+                timeSleep.setReady(true);
+                Output.Send("You are fully rested.");
+            }
 
-            this.timerBalance.setReady(true);
-            Output.Send("You have recovered equilibrium.");
+
+
         }
+
     }
+
 
 }
