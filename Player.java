@@ -1,3 +1,4 @@
+// implements callBack interface from Timers
 public class Player implements callBack {
 
     private String name;
@@ -9,9 +10,10 @@ public class Player implements callBack {
     // 
     private boolean isProned = true;
     // different kind of balances and timers
-    private Timers timerBalance = new Timers();
+    private Timers timerBalance = new Timers("balance");
+    private Timers timerEquilbrium = new Timers("equilbrium");
 
-    // constructor when object is created, always require name
+    // constructor when player object is created
     public Player(String name) {
         this.name = name;
     }
@@ -38,7 +40,6 @@ public class Player implements callBack {
         // Calculate health based on level
         this.healthMax = 1000 + (this.level - 1) * 5;
 
-        Output.Debug(currentLevel + "-:-" + this.level);
         // Output message if you change level
         if (currentLevel > this.level) {
             Output.Send("You have increased to level " + currentLevel + "!");
@@ -50,44 +51,70 @@ public class Player implements callBack {
     }
 
     public void Attack(String name) {
-        
-        for (Mob mob : Main.room.mobsInRoom) {
-            timerBalance.Start(this, 2.0);
-            mob.takeDamage(50);
-            Output.Send("You attacked " + mob.getName() + (mob.getHealth() <= 0 ? " and it falls helplessly to the ground.":"."));
-            break;
+
+        // check and save eventual target in the room
+        Mob target = Main.room.inRoom(name);
+        if (target != null) {
+
+            timerBalance.Start(this, 2.5);
+            target.takeDamage(50);
+            Output.Send("You attacked " + target.getName() + (target.getHealth() <= 0 ? " and it falls helplessly to the ground.":"."));
+
+            if (target.getHealth() <= 0) {
+                // give experience
+                Main.player.expChanged(target.getExp());
+                // remove target
+                target.Remove();
+            }
+
+        } else {
+            Output.Debug("You cant find \""+ name + "\" here.");
         }
+        
+
 
     }
 
     // 
     public void TakeDamage(int damage) {
         this.health -= damage;
-    
+        if (this.health <= 0) {
+            // dead
+            // lose exp
+        }
     }
 
-    public String getName() {
-        return this.name;
-    }
+    public String getName() { return this.name; }
+    public int getHealth() { return this.health; }
+    public int getHealthMax() { return this.healthMax; }
+    public boolean getProned() { return this.isProned; }
 
-    public int getHealth() {
-        return this.health;
+    // metod that checks for balance and outputs error if there is no balance
+    public boolean checkBalance() {
+        if (getBalance()) { return true; }
+        Output.Send("This action requires balance to perform.");
+        return false;
     }
 
     public boolean getBalance() {
-        if (timerBalance.isCreated) { return true; } else { return false; }
+        if (timerBalance.getReady()) { return true; } else { return false; }
     }
 
-    public int getHealthMax() {
-        return this.healthMax;
-    }
-    
-    public boolean getProned() {
-        return this.isProned;
-    }
+    // method that overides interface in timer
+    public void timerComplete() {
 
-    public void Reset(String test) {
-        Output.Debug("You have recovered balance." + test);
+        Output.Debug("Timer reset for: " + this.timerBalance.timerName + ".");
+
+        if (this.timerBalance.timerName == "balance") {
+
+            this.timerBalance.setReady(true);
+            Output.Send("You have recovered balance.");
+
+        } else if (this.timerBalance.timerName == "equilibrium") {
+
+            this.timerBalance.setReady(true);
+            Output.Send("You have recovered equilibrium.");
+        }
     }
 
 }

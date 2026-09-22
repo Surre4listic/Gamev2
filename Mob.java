@@ -1,39 +1,37 @@
 import java.util.UUID;
 
+// implements callBack interface from Timers class
 public class Mob implements callBack {
 
     private final UUID id;
     private final String name;
     private int health;
     private final int dmg;
-    private final double dmginterval;
+    private final double balance;
     private final int exp;
-    private Timers balance = new Timers();
+    private Timers timerBalance = new Timers("balance");
 
-    public Mob(UUID id, String name, int health, int dmg, double dmginterval, int exp) {
+    // constructor
+    public Mob(UUID id, String name, int health, int dmg, double balance, int exp) {
         this.id = id;
         this.name = name;
         this.health = health;
         this.dmg = dmg;
-        this.dmginterval = dmginterval;
+        this.balance = balance;
         this.exp = exp;
         this.Attack();
     }
 
-    public void Reset(String test) {
+    public void timerComplete() {
         // reset balance from balance
-        this.balance.isCreated = false;
-        // remove timer for balance
-        // this.balance.timer.cancel();
+        this.timerBalance.isReady = true;
         // attack again
         this.Attack();
-        System.out.println("Mob test=" + test);
-        System.err.println("testar");
     }
 
     private void Attack() {
-        if (!this.balance.isCreated) {
-            balance.Start(this, dmginterval);
+        if (this.timerBalance.isReady) {
+            timerBalance.Start(this, balance);
             Main.player.TakeDamage(calcDmg());
             Output.Send(this.name + " attacks you.");
         }
@@ -43,9 +41,11 @@ public class Mob implements callBack {
     public void Remove() {
         Output.Debug("Mob -> Remove -> " + getName() + ". " + getId() + ".");
         // remove any balance timer present
-        balance.Cancel();
-        // remove reference
-        balance = null;
+        timerBalance.Cancel();
+        // remove reference to timer
+        timerBalance = null;
+        // remove this object from 
+        Main.room.mobsList.removeIf(e -> e.getId().equals(this.id));
     }
 
     public void takeDamage(int damage) {
@@ -54,12 +54,12 @@ public class Mob implements callBack {
         // if health is less then 0
         if (this.health <= 0) {
             Main.player.expChanged(this.getExp());
-            balance.Cancel();
+            timerBalance.Cancel();
         }
     }
 
     public int calcDmg() { return dmg;}
-    public double getDmgInterval() { return this.dmginterval; }
+    public double getDmgInterval() { return this.balance; }
 
     public UUID getId() { return this.id; }
     public String getName() { return this.name; }

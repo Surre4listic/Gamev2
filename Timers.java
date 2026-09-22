@@ -1,43 +1,38 @@
 import java.util.Timer;
 import java.util.TimerTask;
 
-interface callBack { void Reset(String test); }
+// callback interface to help the class that created timer react to completetion
+interface callBack { void timerComplete(); }
 
 public class Timers {
 
     Timer timer = new Timer();
     TimerTask timerTask;
-    boolean isCreated;
+    boolean isReady = true;
+    String timerName;
    
-    public Timers() {
-        isCreated = false;
-    }
+    // constructor
+    public Timers(String name) { this.timerName = name; }
 
+    // start a timer
     public void Start(callBack callback, Double delay) {
-        isCreated = true;
+        this.isReady = false;
         timerTask = new TimerTask() {
             @Override
-            public void run() {
-                callback.Reset("test2");
-            }
+            // call callBack interface when complete
+            public void run() { callback.timerComplete(); }
         };
         timer.schedule(timerTask, (long)(delay * 1000));
     }
 
     public void Cancel() {
-
         timerTask.cancel();
         timer.purge();
-        System.out.println("-------------");
-        /*
-        if (tt != null ) {tt.cancel();}
-        if (timer != null ) {timer.purge();}
-        */
     }
 
     // set value if timer is created, this is used to keep track on timers, balances etc
-    public void setCreated(boolean value) { this.isCreated = value; }
-    // get value if there is a timer and see if it's used already
-    public boolean getCreated() { return isCreated; }
+    public void setReady(boolean value) { this.isReady = value; }
+    // get value if there is a timer and see if this is ready or not
+    public boolean getReady() { return isReady; }
 
 }

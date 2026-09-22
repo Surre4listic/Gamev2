@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Room {
 
-    public List<Mob> mobsInRoom = new ArrayList<>();
+    public List<Mob> mobsList = new ArrayList<>();
     private static final Random random = new Random();
     
     // display a new room
@@ -16,9 +16,7 @@ public class Room {
         this.populateRoom();
 
         // show all mobs to the room
-        for (Mob mob : mobsInRoom) {
-            displayRoom += "\n" + mob.getName();
-        }
+        for (Mob mob : mobsList) { displayRoom += "\n" + mob.getName(); }
 
         Output.Send(displayRoom);
     }
@@ -32,13 +30,20 @@ public class Room {
     private void populateRoom() {
         for (int i = 1; i <= random.nextInt(4); i++) {
             // add random mob from within length of mobtemplate and use method mobcreate to give it
-            mobsInRoom.add(MobTemplate.createMob(MobTemplate.values()[random.nextInt(MobTemplate.values().length)]));
+            mobsList.add(MobTemplate.createMob(MobTemplate.values()[random.nextInt(MobTemplate.values().length)]));
         }
+    }
+
+    public Mob inRoom(String name) {
+        for (Mob mob : mobsList) {
+            if (mob.getName().equalsIgnoreCase(name)) {return mob;}
+        }
+        return null;
     }
 
     // clear the room of mobs and call necessary methods to remove timers
     public void clearRoom() {
-        for (Mob mob : this.mobsInRoom) {
+        for (Mob mob : this.mobsList) {
             mob.Remove();
         }
     }

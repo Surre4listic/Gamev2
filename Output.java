@@ -1,13 +1,17 @@
 public class Output {
 
     // set to true to enable debug messages
-    private static boolean isDebugEnabled = true;
+    private static boolean isDebugEnabled = false;
     
     // standard print function (with prompt after message)
     public static void Send(String message) {
-        System.out.println(" " + message.replace("\n", "\n ") + 
-        "\n H: "+ Main.player.getHealth() + "/" + Main.player.getHealthMax() +
-        " <"+ (!Main.player.getBalance()?"B":"-") + (!Main.player.getProned()?"P":"") +">");
+        // first message
+        message = " " + message.replace("\n", "\n ");
+        // then health, mana etc
+        message += "\n H: "+ Main.player.getHealth() + "/" + Main.player.getHealthMax();
+        // then balances and such
+        message += " <"+ (Main.player.getBalance()?"B":"-") + (!Main.player.getProned()?"P":"") +">";
+        System.out.println(message);
     }
 
     // print without prompt
