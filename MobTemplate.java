@@ -2,9 +2,9 @@ import java.util.UUID;;
 
 public enum MobTemplate {
     // name,            health, damage, balance, exp
-    GOBLIN("Goblin",    100,    10,     1.0,    10),
-    ORC("Orc",          100,    10,     1.5,    20),
-    OGRE("Ogre",        20,     20,     2.0,    30);
+    GOBLIN("Goblin",    100,    10,     3.0,    10),
+    ORC("Orc",          100,    10,     3.5,    20),
+    OGRE("Ogre",        20,     20,     4.0,    30);
 
     private final String name;
     private final int health;

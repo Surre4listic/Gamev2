@@ -37,15 +37,20 @@ public class Mob implements callBack {
         }
     }
 
-    // metod to remove mobs in the room
+    // metod to remove mob in the room
     public void Remove() {
         Output.Debug("Mob -> Remove -> " + getName() + ". " + getId() + ".");
+        this.ClearTimer();
+        // remove this object from 
+        Main.room.mobsList.removeIf(item -> item.getId().equals(this.id));
+    }
+
+    // method to clear timers for this mob
+    public void ClearTimer() {
         // remove any balance timer present
         timerBalance.Cancel();
         // remove reference to timer
         timerBalance = null;
-        // remove this object from 
-        Main.room.mobsList.removeIf(e -> e.getId().equals(this.id));
     }
 
     public void takeDamage(int damage) {

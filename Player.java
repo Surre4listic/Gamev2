@@ -8,7 +8,7 @@ public class Player implements callBack {
     private int level = 1;
     private int experience = 0;
     // 
-    private boolean isProned = true;
+    private boolean isProned = false;
     // different kind of balances and timers
     private Timers timerBalance = new Timers("balance");
     private Timers timerEquilbrium = new Timers("equilbrium");
@@ -21,6 +21,7 @@ public class Player implements callBack {
     // change experience and call method to calculate changes
     public void expChanged(int exp) {
         this.experience += exp;
+        System.out.println("Current exp: " + this.experience);
         calculateStats();
     }
 
@@ -33,12 +34,13 @@ public class Player implements callBack {
             Output.Debug(this.experience + " >= " + Tables.levels[i][1]);
             if (this.experience >= Tables.levels[i][1]) {
                 currentLevel = i + 1;
+            } else {
                 break;
             }
         }
 
         // Calculate health based on level
-        this.healthMax = 1000 + (this.level - 1) * 5;
+        this.healthMax = (int)Math.round(1000 + (this.level - 1) * 0.5);
 
         // Output message if you change level
         if (currentLevel > this.level) {
@@ -103,14 +105,14 @@ public class Player implements callBack {
     // method that overides interface in timer
     public void timerComplete() {
 
-        Output.Debug("Timer reset for: " + this.timerBalance.timerName + ".");
+        Output.Debug("Timer reset for: " + this.timerBalance.name + ".");
 
-        if (this.timerBalance.timerName == "balance") {
+        if (this.timerBalance.name == "balance") {
 
             this.timerBalance.setReady(true);
             Output.Send("You have recovered balance.");
 
-        } else if (this.timerBalance.timerName == "equilibrium") {
+        } else if (this.timerBalance.name == "equilibrium") {
 
             this.timerBalance.setReady(true);
             Output.Send("You have recovered equilibrium.");

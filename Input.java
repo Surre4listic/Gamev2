@@ -13,6 +13,11 @@ public class Input {
                 Main.room = new Room();
             }
 
+        // look
+        } else if ("look".equalsIgnoreCase(input)) {
+
+            Main.room.display();
+
         // attack mob in the room
         } else if (input.startsWith("attack ")) {
 

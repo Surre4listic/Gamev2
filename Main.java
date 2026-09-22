@@ -11,8 +11,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Input input = new Input();
 
-        System.out.println(MobTemplate.values().length);
-
         Output.Send("Welcome to the game! Please choose a character name:", false);
         // create the player object with the next input as the name
         Main.player = new Player(scanner.nextLine());

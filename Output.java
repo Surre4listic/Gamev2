@@ -1,7 +1,7 @@
 public class Output {
 
     // set to true to enable debug messages
-    private static boolean isDebugEnabled = false;
+    private static boolean isDebugEnabled = true;
     
     // standard print function (with prompt after message)
     public static void Send(String message) {

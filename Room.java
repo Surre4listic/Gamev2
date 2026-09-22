@@ -9,21 +9,13 @@ public class Room {
     
     // display a new room
     public Room() {
-
-        String displayRoom = "You enterd room ***.";
-        
-        // call method that populates room
         this.populateRoom();
-
-        // show all mobs to the room
-        for (Mob mob : mobsList) { displayRoom += "\n" + mob.getName(); }
-
-        Output.Send(displayRoom);
+        display();
     }
 
     // display a empty room
     public Room(boolean isNew) {
-        Output.Send("New room");
+        display();
     }
 
     // method to populate room with 0-3 potential mobs 
@@ -34,6 +26,15 @@ public class Room {
         }
     }
 
+    //
+    public void display() {
+        String displayRoom = "You enterd room ***.";
+        // show all mobs to the room
+        for (Mob mob : mobsList) { displayRoom += "\n" + mob.getName(); }
+        Output.Send(displayRoom);
+    }
+
+    // 
     public Mob inRoom(String name) {
         for (Mob mob : mobsList) {
             if (mob.getName().equalsIgnoreCase(name)) {return mob;}
@@ -43,8 +44,10 @@ public class Room {
 
     // clear the room of mobs and call necessary methods to remove timers
     public void clearRoom() {
-        for (Mob mob : this.mobsList) {
-            mob.Remove();
+        if (this.mobsList != null) {
+            for (Mob mob : this.mobsList) {
+                mob.ClearTimer();
+            }
         }
     }
 
